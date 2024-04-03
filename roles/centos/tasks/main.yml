@@ -1,0 +1,43 @@
+- name: Installing firewalld
+  yum: 
+    name: firewalld
+
+- name: Starting and enabling firewalld
+  systemd:
+    name: firewalld
+    enabled: true
+
+- name: Permiting SSH
+  firewalld:
+    service: ssh
+    permanent: true
+    state: enabled
+
+- name: Permiting HTTP
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+
+- name: Permiting HTTPS
+  firewalld:
+    service: https
+    permanent: true
+    state: enabled
+
+- block:
+  - name: Displaying the status
+    command: systemctl status firewalld
+    register: firewalld_service
+
+  - debug:
+       msg="{{ firewalld_service }}"
+
+  - name: Displaying the status
+    command: firewall-cmd --list-services
+    register: allowed_services
+
+  - debug:
+      msg="{{ allowed_services }}"
+
+

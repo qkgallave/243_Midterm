@@ -1,0 +1,30 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Dpkg fixing in ubuntu servers
+    shell: |
+      dpkg --configure -a
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Updating Ubuntu
+    apt:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Updating Centos
+    yum:
+      update_cache: yes
+    when: ansible_distribution == "Centos"
+
+- hosts: ubuntu
+  become: true
+  roles:
+     - role: ubuntu
+
+- hosts: centos
+  become: true
+  roles:
+     - role: centos
